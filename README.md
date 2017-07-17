@@ -16,6 +16,7 @@ Conf
 -------------
 * storage.conf
 ``````
+## can not use 127.0.0.1
 tracker_server=host-ip:22122
 ``````
 * nginx.conf
