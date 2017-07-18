@@ -38,7 +38,6 @@ docker build -t fastdfs-nginx-server .
 
 Run
 -------------
-* docker on windows
 ``````
 docker run --net=host -d \
   -p 22122:22122 \
@@ -51,18 +50,7 @@ docker run --net=host -d \
   fastdfs-nginx-server \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 ``````
-* docker on linux
-``````
-docker run --net=host -d \
-  -p 22122:22122 \
-  -p 23000:23000 \
-  -p 8080:8080 \
-  -p 8081:8081 \
-  -v /var/log/fdfs/:/data/fdfs/logs/ \
-  -v /data/fdfs/data/:/data/fdfs/data/ \
-  -v /var/log/nginx/:/var/log/nginx/ \
-  fastdfs-nginx-server
-``````
+
 
 API
 -------------
