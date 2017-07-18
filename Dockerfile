@@ -18,9 +18,11 @@ ENV FASTDFS_NGINX_MODULE_VERSION master
 ENV NGINX_EVAL_MODULE_VERSION master
 ENV NGX_HTTP_REDIS_VERSION 0.3.8
 
-## create src dir
+## create and link folders
 RUN mkdir -p /usr/src \
-	mkdir /boot
+	&& -p $FASTDFS_BASE_PATH/data/M00 \
+	&& mkdir /boot \
+	&& ln -s $FASTDFS_BASE_PATH/data  $FASTDFS_BASE_PATH/data/M00
 
 ## install dependency packages
 RUN yum install -y gcc gcc-c++ gd gd-devel geoip geoip-devel gnupg libc libc-devel libevent libevent-devel libxslt libxslt-devel linux-headers openssl openssl-devel pcre pcre-devel perl unzip zlib zlib-devel
@@ -154,8 +156,6 @@ COPY conf/http.conf /etc/fdfs/http.conf
 COPY conf/mod_fastdfs.conf /etc/fdfs/mod_fastdfs.conf
 COPY start.sh /boot/start.sh
 RUN chmod 755 /boot/start.sh
-RUN mkdir -p $FASTDFS_BASE_PATH/data/M00
-RUN ln -s $FASTDFS_BASE_PATH/data  $FASTDFS_BASE_PATH/data/M00
 
 ## nginx port
 EXPOSE 8080 8081
