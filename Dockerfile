@@ -20,7 +20,7 @@ ENV NGX_HTTP_REDIS_VERSION 0.3.8
 
 ## create and link folders
 RUN mkdir -p /usr/src \
-	&& -p $FASTDFS_BASE_PATH/data/M00 \
+	&& mkdir -p $FASTDFS_BASE_PATH/data/M00 \
 	&& mkdir /boot \
 	&& ln -s $FASTDFS_BASE_PATH/data  $FASTDFS_BASE_PATH/data/M00
 
