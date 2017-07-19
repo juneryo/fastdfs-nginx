@@ -17,7 +17,7 @@ Conf
 * storage.conf
 ``````
 ## can not use 127.0.0.1
-tracker_server=host-ip:22122
+tracker_server=container-ip:22122
 ``````
 * nginx.conf
 ``````
@@ -39,7 +39,7 @@ docker build -t fastdfs-nginx-server .
 Run
 -------------
 ``````
-docker run --net=host -d \
+docker run --name fastdfs-nginx-server -d \
   -p 22122:22122 \
   -p 23000:23000 \
   -p 8080:8080 \
