@@ -158,7 +158,7 @@ COPY start.sh /boot/start.sh
 RUN chmod 755 /boot/start.sh
 
 ## nginx port
-EXPOSE 8080 8081
+EXPOSE 24001 24002
 ## fastdfs Tracker,Storage,FastDHT port
 EXPOSE 22122 23000 11411
 

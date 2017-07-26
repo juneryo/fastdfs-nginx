@@ -19,6 +19,10 @@ Conf
 ## can not use 127.0.0.1
 tracker_server=container-ip:22122
 ``````
+* mod_fastdfs.conf
+``````
+tracker_server=container-ip:22122
+``````
 * nginx.conf
 ``````
 ## if need check token from redis
@@ -32,18 +36,38 @@ upstream redisbackend {
 Build
 -------------
 ``````
-## or use your image name to replace name 'fastdfs-nginx-server'
+## you can use your image name to replace name 'fastdfs-nginx-server'
 docker build -t fastdfs-nginx-server .
+``````
+
+Network
+-------------
+``````
+## you can create your network for this server, like:
+docker network create --driver bridge --subnet 192.168.1.0/20 network0
 ``````
 
 Run
 -------------
 ``````
-docker run --name fastdfs-nginx-server -d \
+## if you want to use your network and use ip 192.168.16.6
+docker run -itd \
+  --name fastdfs-nginx-server \
+  --network=network0 --ip=192.168.16.6 \
   -p 22122:22122 \
   -p 23000:23000 \
-  -p 8080:8080 \
-  -p 8081:8081 \
+  -p 24001:24001 \
+  -p 24002:24002 \
+  -v /var/log/fdfs/:/data/fdfs/logs/ \
+  -v /data/fdfs/data/:/data/fdfs/data/ \
+  -v /var/log/nginx/:/var/log/nginx/ \
+  fastdfs-nginx-server \
+  sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
+
+## if you want to use host network
+docker run -itd \
+  --name fastdfs-nginx-server \
+  --network=host \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /data/fdfs/data/:/data/fdfs/data/ \
   -v /var/log/nginx/:/var/log/nginx/ \
@@ -51,13 +75,12 @@ docker run --name fastdfs-nginx-server -d \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 ``````
 
-
 API
 -------------
 ``````
 ## fetch file from server, if you need check token
-http://ip:8080/group1/M00/00/00/xxxxxx?tk=zzz&&typ=yyy
+http://ip:24001/group1/M00/00/00/xxxxxx?tk=zzz&&typ=yyy
 
 ## fetch file from server directly
-http://ip:8081/group1/M00/00/00/xxxxxx.yyy
+http://ip:24002/group1/M00/00/00/xxxxxx.yyy
 ``````
