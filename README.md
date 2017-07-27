@@ -17,11 +17,11 @@ Conf
 * storage.conf
 ``````
 ## can not use 127.0.0.1
-tracker_server=container-ip:22122
+tracker_server=host-ip:22122
 ``````
 * mod_fastdfs.conf
 ``````
-tracker_server=container-ip:22122
+tracker_server=127.0.0.1:22122
 ``````
 * nginx.conf
 ``````
@@ -50,7 +50,19 @@ docker network create --driver bridge --subnet 192.168.1.0/20 network0
 Run
 -------------
 ``````
+## should use host network
+docker run -itd \
+  --name fastdfs-nginx-server \
+  --network=host \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /var/log/fdfs/:/data/fdfs/logs/ \
+  -v /data/fdfs/data/:/data/fdfs/data/ \
+  -v /var/log/nginx/:/var/log/nginx/ \
+  fastdfs-nginx-server \
+  sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
+
 ## if you want to use your network and use ip 192.168.16.6
+## in this case, you should update some conf to make fdfs work
 docker run -itd \
   --name fastdfs-nginx-server \
   --network=network0 --ip=192.168.16.6 \
@@ -58,16 +70,8 @@ docker run -itd \
   -p 23000:23000 \
   -p 24001:24001 \
   -p 24002:24002 \
-  -v /var/log/fdfs/:/data/fdfs/logs/ \
-  -v /data/fdfs/data/:/data/fdfs/data/ \
-  -v /var/log/nginx/:/var/log/nginx/ \
-  fastdfs-nginx-server \
-  sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
-
-## if you want to use host network
-docker run -itd \
-  --name fastdfs-nginx-server \
-  --network=host \
+  -p 11411:11411 \
+  -v /etc/localtime:/etc/localtime:ro \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /data/fdfs/data/:/data/fdfs/data/ \
   -v /var/log/nginx/:/var/log/nginx/ \
