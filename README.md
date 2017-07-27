@@ -63,6 +63,7 @@ docker run -itd \
 
 ## if you want to use your network and use ip 192.168.16.6
 ## in this case, you should update some conf to make fdfs work
+## like set tracker_server in storage.conf to 192.168.16.6
 docker run -itd \
   --name fastdfs-nginx-server \
   --network=network0 --ip=192.168.16.6 \
