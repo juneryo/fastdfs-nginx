@@ -36,8 +36,8 @@ upstream redisbackend {
 Build
 -------------
 ``````
-## you can use your image name to replace name 'fastdfs-nginx-server'
-docker build -t fastdfs-nginx-server .
+## you can use your image name to replace name 'fastdfs-nginx'
+docker build -t fastdfs-nginx .
 ``````
 
 Network
@@ -52,13 +52,13 @@ Run
 ``````
 ## should use host network (test pass)
 docker run -itd \
-  --name fastdfs-nginx-server \
+  --name fastdfs-nginx \
   --network=host \
   -v /etc/localtime:/etc/localtime:ro \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /data/fdfs/data/:/data/fdfs/data/ \
   -v /var/log/nginx/:/var/log/nginx/ \
-  fastdfs-nginx-server \
+  fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 
 ## if you want to use your network and use ip 192.168.16.6
@@ -66,7 +66,7 @@ docker run -itd \
 ## like set tracker_server in storage.conf to 192.168.16.6
 ## the app which use fdfs-client-java to upload file should in the same network (not test yet)
 docker run -itd \
-  --name fastdfs-nginx-server \
+  --name fastdfs-nginx \
   --network=network0 --ip=192.168.16.6 \
   -p 22122:22122 \
   -p 23000:23000 \
@@ -77,7 +77,7 @@ docker run -itd \
   -v /var/log/fdfs/:/data/fdfs/logs/ \
   -v /data/fdfs/data/:/data/fdfs/data/ \
   -v /var/log/nginx/:/var/log/nginx/ \
-  fastdfs-nginx-server \
+  fastdfs-nginx \
   sh -c "/usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf restart && /usr/bin/fdfs_storaged /etc/fdfs/storage.conf restart && /usr/sbin/nginx -g 'daemon off;'"
 ``````
 
